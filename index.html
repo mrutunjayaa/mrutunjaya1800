@@ -1,251 +1,97 @@
 <!doctype html>
-<html lang="hi">
+<html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Demo Login — Local Practice</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Full-page Clickjacking Visual Test</title>
+  <style>
+    /* Make page, body full height and remove margins */
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: #111; /* visible background if iframe fails to load */
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      color: #fff;
+    }
 
-<!--
-  Safe local demo login page.
-  - Does NOT send data anywhere.
-  - Client-side validation only.
-  - Use for UI / UX / local lab practice.
--->
+    /* Fullscreen iframe */
+    iframe#testframe {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      border: 0;
+      margin: 0;
+      padding: 0;
+      z-index: 1;
+    }
 
-<style>
-  :root{
-    --bg:#0f1724;          /* dark background */
-    --card:#0b1220;
-    --accent:#5eead4;      /* mint */
-    --muted:#9aa4b2;
-    --glass: rgba(255,255,255,0.04);
-    --radius:14px;
-    font-family: Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0;
-    background:
-      radial-gradient(600px 400px at 10% 10%, rgba(94,234,212,0.06), transparent 10%),
-      radial-gradient(500px 350px at 90% 90%, rgba(99,102,241,0.04), transparent 10%),
-      var(--bg);
-    color:#e6eef6;
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:24px;
-  }
+    /* Small info bar so you know this is a test page */
+    .info {
+      position: fixed;
+      right: 12px;
+      bottom: 12px;
+      z-index: 2;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      line-height: 1;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+      user-select: none;
+    }
 
-  .wrap{
-    width:100%;
-    max-width:920px;
-    display:grid;
-    grid-template-columns: 1fr 400px;
-    gap:28px;
-    align-items:center;
-  }
+    .info small { display:block; opacity:0.8; font-size:11px; }
 
-  /* left: info panel */
-  .info{
-    padding:28px;
-    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border-radius:var(--radius);
-    box-shadow: 0 6px 30px rgba(3,6,23,0.6);
-    min-height:340px;
-  }
-  .brand{
-    display:flex;
-    gap:12px;
-    align-items:center;
-  }
-  .logo{
-    width:56px;height:56px;border-radius:12px;
-    background:linear-gradient(135deg,var(--accent), #6ee7b7);
-    display:flex;align-items:center;justify-content:center;font-weight:700;color:#042018;
-    box-shadow: 0 6px 20px rgba(94,234,212,0.12), inset 0 -6px 18px rgba(0,0,0,0.15);
-  }
-  h1{margin:14px 0 6px;font-size:20px}
-  p.lead{margin:0;color:var(--muted);line-height:1.45}
-
-  .features{margin-top:18px;display:flex;flex-wrap:wrap;gap:12px}
-  .chip{
-    padding:8px 12px;background:var(--glass);border-radius:10px;font-size:13px;color:var(--muted);
-  }
-
-  /* right: card (form) */
-  .card{
-    padding:20px;border-radius:16px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    box-shadow: 0 10px 40px rgba(2,6,23,0.6);
-  }
-  .card h2{margin:4px 0 12px;font-size:18px}
-  form{display:grid;gap:12px}
-  label{font-size:13px;color:var(--muted)}
-  input[type="text"], input[type="password"]{
-    width:100%;
-    padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);
-    background:rgba(255,255,255,0.02);color:inherit;font-size:15px;
-    outline:none;transition:box-shadow .15s, border-color .12s;
-  }
-  input:focus{box-shadow:0 8px 22px rgba(2,6,23,0.6);border-color:rgba(94,234,212,0.22)}
-  .row{display:flex;gap:10px;align-items:center;justify-content:space-between}
-  .muted{color:var(--muted);font-size:13px}
-  .btn{
-    appearance:none;border:0;padding:12px 14px;border-radius:10px;background:linear-gradient(90deg,var(--accent),#34d399);color:#042018;font-weight:600;cursor:pointer;
-    display:inline-flex;gap:10px;align-items:center;justify-content:center;
-    transition:transform .08s ease, box-shadow .08s;
-  }
-  .btn:active{transform:translateY(1px)}
-  .small{font-size:13px;padding:9px 12px}
-
-  .note{font-size:13px;color:var(--muted);margin-top:6px}
-  .status{
-    padding:10px;border-radius:10px;font-size:14px;margin-top:6px;display:none;
-  }
-  .status.ok{background:linear-gradient(90deg, rgba(94,234,212,0.08), rgba(34,197,94,0.03)); color:#bff7e8; display:block;}
-  .status.err{background:linear-gradient(90deg, rgba(248,113,113,0.06), rgba(253,224,224,0.02)); color:#ffdede; display:block;}
-
-  .meta{margin-top:12px;font-size:12px;color:var(--muted)}
-  .hint{font-size:13px;color:var(--muted);margin-top:10px}
-
-  /* responsive */
-  @media (max-width:880px){
-    .wrap{grid-template-columns:1fr; padding:0}
-    .info{order:2}
-  }
-</style>
+    /* Friendly fallback message when iframe doesn't load */
+    .fallback {
+      position: fixed;
+      inset: 0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .fallback p {
+      max-width:80%;
+      text-align:center;
+      color:#ccc;
+      font-size:18px;
+      background: rgba(0,0,0,0.45);
+      padding: 18px;
+      border-radius:10px;
+    }
+  </style>
 </head>
 <body>
-  <main class="wrap" role="main">
-    <section class="info" aria-labelledby="title">
-      <div class="brand">
-        <div class="logo" aria-hidden="true">L</div>
-        <div>
-          <div style="font-size:13px;color:var(--muted)">mrutunjaya</div>
-          <div style="font-weight:700">Mrutunjya</div>
-        </div>
-      </div>
+  <!-- Replace src value with the target you want to test -->
+  <iframe id="testframe" src="https://mere-business-site.lovable.app/" loading="eager" title="Clickjacking test frame"></iframe>
 
-      <h1 id="title">Mrutunjaya senpati</h1>
-      <p class="lead">Yeh page sirf local practice ke liye hai — koi network request nahin karega. UI, validation aur accessibility sikho.</p>
+  <div class="info" role="status" aria-live="polite">
 
-      <div class="features" aria-hidden="true">
-        <span class="chip">mrutunjaya</span>
-        <span class="chip">A11y friendly</span>
-        <span class="chip">No network</span>
-        <span class="chip">Fast</span>
-      </div>
+    <small></small>
+  </div>
 
-      <p class="hint">Tip: Is page ko customize karke form fields badal ke UX tests kar sakte ho. Kisi real user ka data collect mat karo bina likhit ijazat ke.</p>
-    </section>
+  <div class="fallback" aria-hidden="true">
+    <p></em></p>
+  </div>
 
-    <section class="card" aria-labelledby="formTitle">
-      <h2 id="formTitle">Mrutunjaya</h2>
-
-      <form id="demoForm" onsubmit="return false;" novalidate>
-        <div>
-          <label for="email">Email / Username</label>
-          <input id="email" name="email" type="text" inputmode="email" autocomplete="username" placeholder="demo@example.test" required aria-required="true" />
-        </div>
-
-        <div>
-          <label for="pwd">Password</label>
-          <input id="pwd" name="pwd" type="password" autocomplete="current-password" placeholder="••••••••" required aria-required="true" minlength="6" />
-        </div>
-
-        <div class="row">
-          <div class="muted"><input id="remember" type="checkbox" /> <label for="remember">Remember (local only)</label></div>
-          <button class="btn small" id="submitBtn" type="submit" aria-label="Sign in">Sign in</button>
-        </div>
-
-        <div id="status" role="status" class="status" aria-live="polite"></div>
-
-        <div class="meta">
-          <div>Local demo — no backend. Open <code>index.html</code> directly.</div>
-        </div>
-      </form>
-    </section>
-  </main>
-
-<script>
-  // Safe demo logic:
-  // - No network requests
-  // - Simple client-side validation
-  // - Optionally "remember" saves only to localStorage (for demo only)
-  const form = document.getElementById('demoForm');
-  const status = document.getElementById('status');
-  const email = document.getElementById('email');
-  const pwd = document.getElementById('pwd');
-  const remember = document.getElementById('remember');
-
-  // Load demo remembered username (only for local demo)
-  try {
-    const r = localStorage.getItem('demo_user');
-    if (r) {
-      email.value = r;
-      remember.checked = true;
+  <script>
+    // Resize iframe on zoom/resize to always cover viewport (defensive)
+    const frame = document.getElementById('testframe');
+    function fit() {
+      frame.style.width = window.innerWidth + 'px';
+      frame.style.height = window.innerHeight + 'px';
     }
-  } catch(e){ /* ignore storage errors */ }
+    window.addEventListener('resize', fit, {passive:true});
+    window.addEventListener('orientationchange', fit, {passive:true});
+    fit();
 
-  function show(s, ok=true){
-    status.className = 'status ' + (ok ? 'ok':'err');
-    status.textContent = s;
-    status.style.display = 'block';
-    // auto-hide after 4s
-    setTimeout(()=>{ status.style.display = 'none'; }, 4000);
-  }
-
-  function validateEmail(u){
-    // very simple email/username check: either contains @ or is 3+ chars
-    if (!u) return false;
-    if (u.includes('@')) return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(u);
-    return u.trim().length >= 3;
-  }
-
-  form.addEventListener('submit', (e)=>{
-    e.preventDefault();
-    const u = email.value.trim();
-    const p = pwd.value;
-
-    if (!validateEmail(u)){
-      show('Email/username invalid — try demo@example.test or a short name', false);
-      email.focus();
-      return;
-    }
-    if (p.length < 6){
-      show('Password must be at least 6 characters', false);
-      pwd.focus();
-      return;
-    }
-
-    // Demo "authentication" logic for local lab:
-    // - If username contains "demo" => success
-    // - Otherwise show "invalid" (this is purely for local UX demo)
-    if (u.toLowerCase().includes('demo') || p === 'password123'){
-      show('Login successful — (local demo only).', true);
-
-      // Remember username locally if asked (demo only)
-      try{
-        if (remember.checked) localStorage.setItem('demo_user', u);
-        else localStorage.removeItem('demo_user');
-      }catch(e){ /* ignored */ }
-
-      // Show a small simulated "post-login" notification (no real redirect)
-      setTimeout(()=>{
-        alert('Local demo: you are signed in (no network activity). Use this for UI practice only.');
-      }, 350);
-    } else {
-      show('Invalid credentials (demo rules). Try username "demo" or password "password123".', false);
-    }
-  });
-
-  // Accessibility: submit on Enter key inside password too
-  pwd.addEventListener('keydown', (ev)=>{
-    if (ev.key === 'Enter') form.dispatchEvent(new Event('submit', {cancelable:true}));
-  });
-</script>
+    // Helpful console hint
+    console.info("Clickjacking visual tester: iframe loaded with src=", frame.src);
+  </script>
 </body>
 </html>
-
