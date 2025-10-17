@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Webify Studio - Digital Brand Setup</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<style>
+/* Extra Futuristic Styles */
+body {
+  scroll-behavior: smooth;
+  font-family: 'Poppins', sans-serif;
+  background: #0f172a; /* Dark futuristic bg */
+  color: #f1f5f9;
+}
+section {
+  scroll-margin-top: 100px;
+}
+.card {
+  background: linear-gradient(145deg, rgba(29,78,216,0.8), rgba(96,165,250,0.3));
+  backdrop-filter: blur(10px);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.btn {
+  background: linear-gradient(to right, #3b82f6, #06b6d4);
+  color: white;
+  font-weight: 600;
+  padding: 0.7rem 1.8rem;
+  border-radius: 0.75rem;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="fixed w-full z-50 bg-gradient-to-r from-blue-900 to-indigo-900/80 backdrop-blur-lg shadow-lg">
+  <div class="container mx-auto flex justify-between items-center py-4 px-6">
+    <div class="text-2xl font-bold text-cyan-400 tracking-wider">Webify Studio</div>
+    <div class="space-x-6">
+      <a href="#services" class="hover:text-cyan-400">Services</a>
+      <a href="#packages" class="hover:text-cyan-400">Packages</a>
+      <a href="#process" class="hover:text-cyan-400">Process</a>
+      <a href="#contact" class="hover:text-cyan-400">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="pt-24 text-center py-32 bg-gradient-to-br from-blue-900 to-indigo-800">
+  <h1 class="text-5xl md:text-6xl font-bold mb-6 tracking-wide text-cyan-400">Digital Brand Setup</h1>
+  <p class="text-xl md:text-2xl mb-8 text-gray-200">Professional Websites + Social Media + Branding in One Package</p>
+  <a href="#contact" class="btn">Start Your Brand</a>
+</section>
+
+<!-- Services Section -->
+<section id="services" class="container mx-auto py-24 px-6">
+  <h2 class="text-4xl font-bold text-center mb-16 text-cyan-400">Our Services</h2>
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+    <div class="card">
+      <h3 class="text-2xl font-bold mb-3">Website Creation</h3>
+      <ul class="list-disc ml-5 space-y-2 text-gray-100">
+        <li>Fully Responsive Website</li>
+        <li>All Pages: Home, About, Services, Blog, Contact</li>
+        <li>SEO-Friendly Structure</li>
+        <li>Favicon + Branding Setup</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 class="text-2xl font-bold mb-3">Social Media Setup</h3>
+      <ul class="list-disc ml-5 space-y-2 text-gray-100">
+        <li>Facebook Business Page</li>
+        <li>Instagram Business Account</li>
+        <li>LinkedIn Business Page</li>
+        <li>Twitter (X) Profile</li>
+        <li>YouTube Channel Setup</li>
+        <li>Google My Business Setup</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 class="text-2xl font-bold mb-3">Branding & Extras</h3>
+      <ul class="list-disc ml-5 space-y-2 text-gray-100">
+        <li>Custom Logo & Brand Colors</li>
+        <li>Business Email Setup</li>
+        <li>Google Analytics Integration</li>
+        <li>Social Media Post Templates</li>
+        <li>Link-in-Bio Page</li>
+        <li>1 Week Support After Delivery</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Packages Section -->
+<section id="packages" class="py-24 px-6">
+  <h2 class="text-4xl font-bold text-center mb-16 text-cyan-400">Service Packages</h2>
+  <div class="max-w-5xl mx-auto grid md:grid-cols-3 gap-8">
+    <div class="card text-center">
+      <h3 class="text-2xl font-bold mb-4">Starter Kit</h3>
+      <ul class="list-disc ml-5 text-gray-100 mb-4">
+        <li>Website (5 Pages)</li>
+        <li>Social Media Setup</li>
+        <li>Basic Branding</li>
+      </ul>
+      <span class="text-cyan-300 font-bold text-lg">Ideal for Small Businesses</span>
+    </div>
+    <div class="card text-center">
+      <h3 class="text-2xl font-bold mb-4">Professional Kit</h3>
+      <ul class="list-disc ml-5 text-gray-100 mb-4">
+        <li>Website + SEO</li>
+        <li>Social Media Setup + Branding</li>
+        <li>Business Email + Analytics</li>
+      </ul>
+      <span class="text-cyan-300 font-bold text-lg">Best for Growing Brands</span>
+    </div>
+    <div class="card text-center">
+      <h3 class="text-2xl font-bold mb-4">Premium Kit</h3>
+      <ul class="list-disc ml-5 text-gray-100 mb-4">
+        <li>All Professional Kit Features</li>
+        <li>Social Media Templates</li>
+        <li>Link-in-Bio + Post Guidance</li>
+      </ul>
+      <span class="text-cyan-300 font-bold text-lg">Complete Digital Presence</span>
+    </div>
+  </div>
+</section>
+
+<!-- Process Section -->
+<section id="process" class="container mx-auto py-24 px-6">
+  <h2 class="text-4xl font-bold text-center mb-16 text-cyan-400">Our Work Process</h2>
+  <div class="max-w-3xl mx-auto space-y-6 text-gray-200 text-lg">
+    <p>1️⃣ Client provides business info & preferences.</p>
+    <p>2️⃣ We create website, social media accounts & branding.</p>
+    <p>3️⃣ Preview sent for client approval.</p>
+    <p>4️⃣ Final delivery with all credentials & assets.</p>
+    <p>5️⃣ 1-week post-delivery support for edits & guidance.</p>
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="py-24 px-6 text-center">
+  <h2 class="text-4xl font-bold mb-6 text-cyan-400">Ready to Start Your Digital Presence?</h2>
+  <p class="mb-8 text-gray-200 text-lg">Contact me today and let’s build your professional online brand!</p>
+  <a href="mailto:your-email@example.com" class="btn">Email Me</a>
+</section>
+
+<!-- Footer -->
+<footer class="bg-gray-900 text-gray-400 text-center py-6 mt-12">
+  <p>© 2025 Webify Studio | All rights reserved</p>
+</footer>
+
+</body>
+</html>
